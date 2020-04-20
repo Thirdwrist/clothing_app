@@ -11,15 +11,6 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
-
-    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
@@ -36,4 +27,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    const USER = "user";
+    const BUSINESS = "business";
+    const DESIGNER = "designer";
+
+    const MALE = "male";
+    const FEMALE = "female";
+
+    protected $guarded = [];
 }

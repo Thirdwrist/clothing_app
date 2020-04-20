@@ -2,7 +2,11 @@
 
 namespace App\Exceptions;
 
+use function config;
+use function dd;
+use function env;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -36,6 +40,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $exception)
     {
+
         parent::report($exception);
     }
 
@@ -50,6 +55,17 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if($exception instanceof ValidationException && env('APP_ENV') === 'testing')
+        {
+
+            return response()->json(
+                [
+                    'message'=>'Validation exception thrown',
+                    'errors'=> $exception->errors()
+
+                ], 422
+            );
+        }
         return parent::render($request, $exception);
     }
 }
