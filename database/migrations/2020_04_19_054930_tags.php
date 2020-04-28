@@ -17,7 +17,6 @@ class Tags extends Migration
             $table->id();
             $table->string('tag');
             $table->unsignedBigInteger("user_id");
-            $table->longText('Description')->nullable();
             $table->timestamps();
             $table->foreign("user_id")
                 ->references("id")

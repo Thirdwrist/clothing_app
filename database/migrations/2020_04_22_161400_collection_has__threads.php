@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ThreadComments extends Migration
+class CollectionHasThreads extends Migration
 {
     /**
      * Run the migrations.
@@ -14,18 +14,17 @@ class ThreadComments extends Migration
     public function up()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::create('comments', static function (Blueprint $table) {
+        Schema::create('collection_has_threads', static function (Blueprint $table) {
             $table->id();
-            $table->longText('comment');
+            $table->unsignedInteger('collection_id');
             $table->unsignedBigInteger('thread_id');
-            $table->unsignedBigInteger('comment_id')->nullable();
             $table->timestamps();
 
             $table->foreign('thread_id')
-                ->on('threads')
+                ->on('thread')
                 ->references('id');
-            $table->foreign('comment_id')
-                ->on('comments')
+            $table->foreign('collection_id')
+                ->on('collection')
                 ->references('id');
         });
         Schema::enableForeignKeyConstraints();
@@ -38,6 +37,6 @@ class ThreadComments extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comments');
+        //
     }
 }

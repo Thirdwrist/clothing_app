@@ -16,12 +16,12 @@ class Thread extends Migration
         Schema::create('threads', function (Blueprint $table) {
             $table->id();
             $table->string('thread');
-            $table->unsignedBigInteger("user_id");
-            $table->longText('Description')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->longText('description')->nullable();
             $table->timestamps();
-            $table->foreign("user_id")
-                ->references("id")
-                ->on("users");
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
         });
     }
 

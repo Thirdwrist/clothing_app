@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', static function () {
-
+    $file ='https://thirdwrist-clothing.s3.eu-west-2.amazonaws.com/public/images/thread_posts/fri-apr-24-2020-200-pm1409517.jpeg';
+    return Storage::disk('s3')->response($file);
 });
 

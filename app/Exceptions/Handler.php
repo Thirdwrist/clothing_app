@@ -57,7 +57,6 @@ class Handler extends ExceptionHandler
     {
         if($exception instanceof ValidationException && env('APP_ENV') === 'testing')
         {
-
             return response()->json(
                 [
                     'message'=>'Validation exception thrown',
@@ -66,6 +65,7 @@ class Handler extends ExceptionHandler
                 ], 422
             );
         }
+
         return parent::render($request, $exception);
     }
 }

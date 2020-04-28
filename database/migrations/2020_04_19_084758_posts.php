@@ -13,12 +13,18 @@ class Posts extends Migration
      */
     public function up()
     {
-        Schema::create('Posts', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string("title");
-            $table->longText("description")->nullable();
-            $table->char("image");
+            $table->unsignedBigInteger('thread_id');
+            $table->integer('position')->nullable();
+            $table->longText('description')->nullable();
+            $table->char('connection');
+            $table->char('image_url');
             $table->timestamps();
+
+            $table->foreign('thread_id')
+                ->on('threads')
+                ->references('id');
         });
     }
 

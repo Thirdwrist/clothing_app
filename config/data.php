@@ -2,6 +2,12 @@
 
 return [
 
+    /*
+     * Date format
+     * */
+
+    'date_format'=> 'd-m-Y H:M:S',
+
     /**
      * Array of countries with their ISO 3166-1 alpha-2 codes.
      *
