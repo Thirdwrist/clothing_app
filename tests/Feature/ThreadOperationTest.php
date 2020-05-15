@@ -16,8 +16,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ThreadOperationTest extends TestCase
 {
-    use DatabaseMigrations, RefreshDatabase;
-
     /**
      * @test
      * */

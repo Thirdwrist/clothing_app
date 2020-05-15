@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Tags extends Migration
+class SavedModels extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,16 @@ class Tags extends Migration
      */
     public function up()
     {
-        Schema::create('tags', function (Blueprint $table) {
+        Schema::create('saved_models', function (Blueprint $table) {
             $table->id();
-            $table->string('tag');
-            $table->unsignedBigInteger("user_id");
-            $table->longText("description")->nullable();
+            $table->char('model_type');
+            $table->unsignedBigInteger('model_id');
+            $table->unsignedBigInteger('user_id');
+
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
             $table->timestamps();
-            $table->foreign("user_id")
-                ->references("id")
-                ->on("users");
         });
     }
 
@@ -32,6 +33,6 @@ class Tags extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tags');
+        Schema::dropIfExists('saved_models');
     }
 }

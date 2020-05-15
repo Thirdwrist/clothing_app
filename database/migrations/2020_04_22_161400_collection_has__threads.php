@@ -37,6 +37,6 @@ class CollectionHasThreads extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('collection_has_threads');
     }
 }

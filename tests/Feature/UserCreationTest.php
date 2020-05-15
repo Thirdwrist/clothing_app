@@ -15,7 +15,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserCreationTest extends TestCase
 {
-    use RefreshDatabase, DatabaseMigrations;
     /**
      * A basic feature test example.
      *

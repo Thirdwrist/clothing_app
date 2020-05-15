@@ -20,4 +20,16 @@ class Thread extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function tags()
+    {
+        return $this->belongsToMany(
+            Tag::class,
+            'model_has_tags',
+            'model_id',
+            'tag_id'
+        )->where(
+            'model_type',
+            self::class
+        );
+    }
 }
