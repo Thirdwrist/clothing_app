@@ -6,10 +6,7 @@ use App\Http\Resources\ThreadResource;
 use App\Models\Post;
 use App\Models\Thread;
 use App\User;
-use function collect;
 use Faker\Factory;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Storage;
@@ -68,6 +65,7 @@ class ThreadOperationTest extends TestCase
         $thread = factory(Thread::class)->raw([
             'thread'=>'o'
         ]);
+
         $threadCreated = factory(Thread::class)->states(['create'])->create();
 
         $this->actingAs($user = factory(User::class)->state('hashed_password')->create())

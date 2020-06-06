@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tag extends Model
 {
+    protected $guarded = [];
+
     public function threads()
     {
         return $this->belongsToMany(
@@ -13,10 +15,11 @@ class Tag extends Model
             'model_has_tags',
             'tag_id',
             'model_id'
-        )->where(
+        )->wherePivot(
             'model_type',
             Thread::class
-        );
+        )->withTimestamps()
+            ->withPivot('model_type');
     }
 
     public function collections()
@@ -29,6 +32,7 @@ class Tag extends Model
         )->where(
             'model_type',
             Collection::class
-        );
+        )->withTimestamps()
+            ->withPivot('model_type');
     }
 }

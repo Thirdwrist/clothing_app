@@ -3,6 +3,26 @@
 return [
 
     /*
+     * MAx posts in a Thread
+     * */
+    'max_posts_in_thread'=>5,
+
+    /*
+    * MAx tags Thread
+    * */
+    'max_tags_in_thread'=>5,
+
+    /*
+   * Max tags in collection
+   * */
+    'max_tags_in_collection'=>10,
+
+    /*
+   * MAx tags in Material
+   * */
+    'max_tags_in_material'=>10,
+
+    /*
      * Date format
      * */
 

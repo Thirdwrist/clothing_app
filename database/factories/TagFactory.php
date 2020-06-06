@@ -10,6 +10,7 @@ use Faker\Generator as Faker;
 $factory->define(Tag::class, function (Faker $faker) {
     return [
         'tag'=> $faker->domainName,
-        'user_id'=> factory(User::class)->create()->id
+        'user_id'=> factory(User::class)->state('hashed_password')->create()->id,
+        'description'=> $faker->sentence(5),
     ];
 });

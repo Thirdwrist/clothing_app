@@ -23,6 +23,8 @@ class ThreadController extends Controller
 
     public function show(User $user, Thread $thread)
     {
+        $thread = $user->threads()->where('id', $thread->id)->firstOrFail();
+
         return response()->json([
             'status'=> $this->ok,
             'message'=> Response::$statusTexts[$this->ok],
@@ -30,6 +32,7 @@ class ThreadController extends Controller
                 'thread'=> new ThreadResource($thread)
             ]
         ]);
+
     }
 
     public function store(User $user, Request $request)

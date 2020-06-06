@@ -23,7 +23,8 @@ class ThreadResource extends JsonResource
               'name'=>$this->user->name,
               'username'=> $this->user->username
             ],
-          'posts'=> new PostCollection($this->posts)
+            'tags'=> TagResource::collection($this->tags),
+            'posts'=> new PostCollection($this->posts)
         ];
     }
 }

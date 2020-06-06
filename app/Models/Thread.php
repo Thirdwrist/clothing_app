@@ -27,9 +27,10 @@ class Thread extends Model
             'model_has_tags',
             'model_id',
             'tag_id'
-        )->where(
+        )->wherePivot(
             'model_type',
             self::class
-        );
+        )->withTimestamps()
+            ->withPivot(['model_type', 'id']);
     }
 }

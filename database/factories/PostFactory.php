@@ -23,6 +23,6 @@ $factory->state(Post::class, 'create', function (Faker $faker){
     return [
         'image_url'=> $faker->imageUrl(),
         'thread_id'=> factory(Thread::class)->state('create'),
-        'connection'=> env('FILESYSTEM_DRIVER')
+        'connection'=> config('filesystems.default')
     ];
 });

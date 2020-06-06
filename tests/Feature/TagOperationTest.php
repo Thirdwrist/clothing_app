@@ -2,35 +2,27 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\Concerns\HttpResponses;
 use App\Models\Tag;
 use App\Models\Thread;
 use App\User;
-use function collect;
-use function factory;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Arr;
-use function route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class TagOperationTest extends TestCase
 {
+    use HttpResponses;
     /**
      * @test
      */
-    public function creat_tag()
+    public function create_tag()
     {
         $tags = factory(Tag::class, 3)->raw();
         $actor= factory(User::class)->state('hashed_password')->create();
         $this->actingAs($actor)
-            ->postJson(route('app.tag.store') , $tags)
+            ->postJson(route('app.tag.store') , ['tags'=>$tags])
             ->assertCreated()
-            ->assertJson(
-                [
-                    'status'=> $status = Response::HTTP_CREATED,
-                    'message'=> Response::$statusTexts[$status],
-                ]);
+            ->assertJson($this->responseInArray($this->created()));
 
         collect($tags)->each(function ($tag) use($actor){
             $this->assertDatabaseHas('tags', [
@@ -49,7 +41,7 @@ class TagOperationTest extends TestCase
         $newTag = factory(Tag::class)->raw();
         $actor= factory(User::class)->state('hashed_password')->create();
         $this->actingAs($actor)
-            ->putJson(route('app.tag.update', ['tag'=>$tag]) , ['tag'=>$newTag])
+            ->putJson(route('app.tag.update', ['tag'=>$tag]) , $newTag)
             ->assertOk()
             ->assertJson(
                 [
@@ -63,15 +55,58 @@ class TagOperationTest extends TestCase
         ]);
     }
 
-
-    public function add_tags_to_thread()
+    /**
+     * @test
+     */
+    public function attach_tags_to_thread()
     {
-        $tags = factory(Tag::class, 3)->create();
-        $actor= factory(User::class)->state('hashed_password')->create();
-        $thread = factory(Thread::class, 1)->states(['posts', 'create'])->create();
+        $this->withoutExceptionHandling();
+        $tags = factory(Tag::class,3)->create();
+        $thread = factory(Thread::class)->state('create')->create();
+        $this->actingAs($thread->user)
+            ->postJson(route('app.user.thread.tag.store', [
+                'thread'=>$thread->id,
+                'user'=>$thread->user->id,
+                ]
+            ) , ['tags'=>$tags->pluck('id')->toArray()])
+            ->assertCreated()
+            ->assertJson(
+                [
+                    'status'=> $status = Response::HTTP_CREATED,
+                    'message'=> Response::$statusTexts[$status],
+                ]);
 
-        $this->actingAs($actor)
-            ->postJson(route('app.thread.tag.store', ['thread'=>$thread->id]) , $tags->pluck('id')->toArray())
+        $tags->each(function ($tag) use($thread){
+
+            $this->assertDatabaseHas('model_has_tags', [
+                'model_type'=>Thread::class,
+                'model_id'=> $thread->id,
+                'tag_id'=> $tag->id,
+            ]);
+        });
+
+    }
+    /**
+     * @test
+     */
+    public function detach_tags_from_thread()
+    {
+        $this->withoutExceptionHandling();
+        $thread = factory(Thread::class)->state('create')->create();
+        $tags = factory(Tag::class, 3)->create()->each(function($tag) use ($thread){
+            $tag->threads()
+                ->attach($thread->id, ['model_type'=> Thread::class]);
+        });
+
+        factory(Tag::class)
+            ->create()
+            ->threads()
+            ->attach($thread->id, ['model_type'=> 'rr']);
+        $this->actingAs($thread->user)
+            ->deleteJson(
+                route('app.user.thread.tag.delete', ['user'=>$thread->user->id,'thread'=>$thread->id]),
+                ['tags'=> $tags->pluck('id')->toArray()]
+            )
             ->assertOk()
             ->assertJson(
                 [
@@ -79,40 +114,18 @@ class TagOperationTest extends TestCase
                     'message'=> Response::$statusTexts[$status],
                 ]);
 
-        $tags->each(function ($tag){
-
-            $this->assertDatabaseHas('model_has_tags', [
-                'model'=>Thread::class,
-                'model_id'=> $tag->id,
-            ]);
+        $tags->each(function ($tag) use($thread){
+            $this->assertNull($thread->tags()->where([
+                'model_type'=>Thread::class,
+                'model_id'=> $thread->id,
+                'tag_id'=> $tag->id,
+            ])->first());
         });
 
-    }
-
-    public function remove_tags_from_thread()
-    {
-        $tags = factory(Tag::class, 3)->create()->each(function($tag){
-            $tag->threads()
-                ->attach(factory(Thread::class)
-                ->states(['create', 'posts'])->create()->id);
-        });
-        $thread = $tags->first()->threads->first();
-
-        $this->actingAs($thread->user)
-            ->postJson(route('app.thread.tag.delete', ['thread'=>$thread->id]) , $tags->pluck('id')->toArray())
-            ->assertOk()
-            ->assertJson(
-                [
-                    'status'=> $status = Response::HTTP_CREATED,
-                    'message'=> Response::$statusTexts[$status],
-                ]);
-
-
-        $this->assertNull(
-            $thread->tags()
-            ->whereIn('model_id', $tags->pluck('id'))
-            ->where('model_type', Thread::class)
-        );
+        $this->assertDatabaseHas('model_has_tags', [
+            'model_type'=>'rr',
+            'model_id'=> $thread->id,
+        ]);
 
     }
 }

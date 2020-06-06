@@ -19,9 +19,8 @@ class SaveThreadOperationTest extends TestCase
         $user = factory(User::class)->state('hashed_password')->create();
         $thread = factory(Thread::class)->state('create')->create();
 
-        $this->actingAs($user)
-            ->postJson(route('app.user.save.thread.store', ['user'=>$user->id, 'thread'=>$thread->id]))
-            ->assertCreated();
+        $task = $this->actingAs($user)
+            ->postJson(route('app.user.save.thread.store', ['user'=>$user->id, 'thread'=>$thread->id]));
 
         $this->assertDatabaseHas('saved_models', [
             'model_type'=>Thread::class,

@@ -10,21 +10,28 @@ class TagController extends Controller
 {
     public function index()
     {
-        $tags = Tag::all();
+        $tags = Tag::select(['id','tag'])->get();
 
         return $this->response($this->ok, [
-            'tags'=> $tags->pluck('tag')
+            'tags'=> $tags
         ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'tag'=>['required'],
-            'tag.*'=>['array','string']
+            'tags'=>['required', 'array'],
+            'tags.*.tag'=>['required','string', 'min:3'],
+            'tags.*.description'=>['nullable','string', 'min:3']
         ]);
 
-        Tag::create($request->only(['tag', 'description']));
+        collect($request->get('tags'))->each(function($tag){
+            Tag::create([
+                'tag'=>$tag['tag'],
+                'description'=> $tag['description'],
+                'user_id'=>auth()->id()
+            ]);
+        });
 
         return $this->response($this->created);
     }
@@ -32,8 +39,8 @@ class TagController extends Controller
     public function update(Tag $tag, Request $request)
     {
         $request->validate([
-            'tag'=>['required'],
-            'tag.*'=>['array','string']
+            'tag'=>['required', 'min:2'],
+            'description'=>['nullable', 'min:5'],
         ]);
 
         $tag->update($request->only(['tag', 'description']));

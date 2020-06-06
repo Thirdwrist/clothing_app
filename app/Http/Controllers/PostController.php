@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Concerns\ImageStorage;
 use App\Http\Resources\ThreadResource;
 use App\Models\Thread;
+use App\Rules\MaximItem;
 use App\User;
+use function config;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use App\Models\Post;
@@ -18,7 +21,7 @@ class PostController extends Controller
     {
         $request->validate([
             'image'=>['required', 'image', 'max:15000'],
-            'description'=>['string']
+            'description'=>['string', new MaximItem($thread->posts(), config('data.max_posts_in_thread'), 'posts')]
         ]);
 
         Post::create([
