@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Resources\ThreadCollection;
+use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\User;
@@ -10,32 +12,6 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name'=> ['required'],
-            'username'=> ['required', 'alpha_dash', 'unique:users,username'],
-            'gender'=> ['required', Rule::in([User::FEMALE, User::MALE])],
-            'role'=> ['required', Rule::in([User::BUSINESS, User::DESIGNER, User::USER])],
-            'email'=> ['required', 'unique:users,email'],
-            'nationality'=> ['required', Rule::in(array_keys(config('data.country_codes')))],
-            'password'=> ['required', 'min:8']
-        ]);
-
-        $user = User::create($request->only([
-            'name', 'username', 'gender', 'role', 'email', 'nationality','password'
-        ]));
-
-        return response()->json([
-            'status'=> $status = Response::HTTP_CREATED,
-            'message'=> Response::$statusTexts[$status],
-            'data'=> [
-                'user'=> $user
-            ]
-        ], 201);
-    }
-
-
     public function update(User $user, Request $request)
     {
         $request->validate([
@@ -53,11 +29,16 @@ class UserController extends Controller
         ]));
 
         return response()->json([
-            'status'=> $status = Response::HTTP_OK,
-            'message'=> Response::$statusTexts[$status],
+            'status'=> $this->ok,
+            'message'=> Response::$statusTexts[$this->ok],
             'data'=> [
                 'user'=> $user
             ]
-        ], 200);
+        ], $this->ok);
+    }
+
+    public function threads(User $user)
+    {
+        return $this->response(Response::HTTP_OK, new ThreadCollection($user->threads));
     }
 }

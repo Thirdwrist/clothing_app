@@ -16,17 +16,17 @@ class ThreadComments extends Migration
         Schema::disableForeignKeyConstraints();
         Schema::create('comments', static function (Blueprint $table) {
             $table->id();
-            $table->longText("comment");
-            $table->unsignedBigInteger("thread_id");
-            $table->unsignedBigInteger("comment_id")->nullable();
+            $table->longText('comment');
+            $table->unsignedBigInteger('thread_id');
+            $table->unsignedBigInteger('comment_id')->nullable();
             $table->timestamps();
 
-            $table->foreign("thread_id")
-                ->on("thread")
-                ->references("id");
-            $table->foreign("comment_id")
-                ->on("comments")
-                ->references("id");
+            $table->foreign('thread_id')
+                ->on('threads')
+                ->references('id');
+            $table->foreign('comment_id')
+                ->on('comments')
+                ->references('id');
         });
         Schema::enableForeignKeyConstraints();
     }

@@ -2,16 +2,19 @@
 
 namespace Tests\Feature;
 
+use function auth;
+use function collect;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 use App\User;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserCreationTest extends TestCase
 {
-    use RefreshDatabase, DatabaseMigrations;
     /**
      * A basic feature test example.
      *
@@ -24,22 +27,15 @@ class UserCreationTest extends TestCase
             'nationality'=> 'NG'
         ]);
 
-        $this->postJson(route('app.user.create'), $user)
-            ->assertStatus(201)
-            ->assertJson(
-                [
-                    'status'=> $status = Response::HTTP_CREATED,
-                    'message'=> Response::$statusTexts[$status],
-                    'data'=> [
-                        'user'=> Arr::except($user, 'password')
-                    ]
-                ]);
+        $res = $this->postJson(route('register'), $user)
+            ->assertStatus(201);
 
-        $this->assertDatabaseHas('users', [
-            'username'=>$user['username'],
-            'email'=> $user['email'],
-            'name'=> $user['name']
-        ]);
+        $res->assertJson(
+            [
+                'status'=> $status = Response::HTTP_CREATED,
+                'message'=> Response::$statusTexts[$status]
+            ]);
+
     }
 
     /**
@@ -55,7 +51,7 @@ class UserCreationTest extends TestCase
             'username'=> $user->username
         ]);
 
-        $this->postJson(route('app.user.create'), $user)
+        $this->postJson(route('register'), $user)
             ->assertStatus(422)
             ->assertJsonValidationErrors(['username', 'email']);
 
@@ -73,7 +69,8 @@ class UserCreationTest extends TestCase
     {
         $user = factory(User::class)->create();
         $updateUser = factory(User::class)->raw();
-        $this->putJson(route('app.user.update', ["user"=>$user]) ,$updateUser)
+        $this->actingAs($user)
+            ->putJson(route('app.user.update', ['user'=>$user]) ,$updateUser)
             ->assertOk()
             ->assertJson(
                 [
