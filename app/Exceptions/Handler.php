@@ -66,8 +66,7 @@ class Handler extends ExceptionHandler
                 ], 422
             );
         }
-//        if($exception instanceof Forbi)
 
-        return parent::render($request, $exception);
+       return parent::render($request, $exception);
     }
 }

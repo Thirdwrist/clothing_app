@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Concerns\HttpResponses;
 use App\Http\Controllers\Concerns\ImageStorage;
 use App\Http\Resources\ThreadCollection;
 use App\Http\Resources\ThreadResource;
@@ -10,7 +9,6 @@ use App\Models\Post;
 use App\Models\Thread;
 use App\User;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class ThreadController extends Controller
 {

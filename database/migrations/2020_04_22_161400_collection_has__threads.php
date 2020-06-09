@@ -14,17 +14,21 @@ class CollectionHasThreads extends Migration
     public function up()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::create('collection_has_threads', static function (Blueprint $table) {
+        Schema::create('collections_has_threads', static function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('collection_id');
+            $table->unsignedBigInteger('collection_id');
             $table->unsignedBigInteger('thread_id');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
 
             $table->foreign('thread_id')
-                ->on('thread')
+                ->on('threads')
+                ->references('id');
+            $table->foreign('user_id')
+                ->on('users')
                 ->references('id');
             $table->foreign('collection_id')
-                ->on('collection')
+                ->on('collections')
                 ->references('id');
         });
         Schema::enableForeignKeyConstraints();
@@ -37,6 +41,6 @@ class CollectionHasThreads extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('collection_has_threads');
+        Schema::dropIfExists('collections_has_threads');
     }
 }

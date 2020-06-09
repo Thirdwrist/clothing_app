@@ -36,3 +36,7 @@ $factory->define(User::class, function (Faker $faker) {
 $factory->state(User::class, 'hashed_password', [
     'password' => Hash::make(1234567890)
 ]);
+
+$factory->state(User::class, 'create', [
+    'password' => Hash::make(1234567890)
+]);

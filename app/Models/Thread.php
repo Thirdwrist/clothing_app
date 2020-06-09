@@ -33,4 +33,9 @@ class Thread extends Model
         )->withTimestamps()
             ->withPivot(['model_type', 'id']);
     }
+
+    public function collections()
+    {
+        return $this->hasMany(Collection::class, 'collections_has_threads');
+    }
 }
