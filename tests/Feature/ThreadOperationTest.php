@@ -68,14 +68,15 @@ class ThreadOperationTest extends TestCase
 
         $threadCreated = factory(Thread::class)->states(['create'])->create();
 
-        $this->actingAs($user = factory(User::class)->state('hashed_password')->create())
+        $validate = $this->actingAs($user = factory(User::class)->state('hashed_password')->create())
             ->putJson(route('app.user.thread.update',
                 [
                     'user'=>$user->id,
                     'thread'=>$threadCreated->id
-                ]), $thread)
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['thread']);
+                ]), $thread);
+
+        $validate->assertStatus(422);
+
 
 
         $this->assertDatabaseMissing('threads',
@@ -126,7 +127,7 @@ class ThreadOperationTest extends TestCase
         $this->withoutExceptionHandling();
         $thread = factory(Thread::class)->state('create')->create();
         $post = $thread->posts()->first();
-        $this->actingAs($thread->user)
+        $edit = $this->actingAs($thread->user)
             ->putJson(
                 route('app.user.thread.post.update', [
                     'thread'=>$thread->id,
@@ -135,8 +136,9 @@ class ThreadOperationTest extends TestCase
                 ]),
             [
                 'description'=> $description = Factory::create()->sentence,
-            ])
-            ->assertStatus(200);
+            ]);
+
+        $edit->assertStatus(200);
 
 
         $this->assertDatabaseHas('posts', [
@@ -150,8 +152,7 @@ class ThreadOperationTest extends TestCase
     public function edit_thread()
     {
         $thread = factory(Thread::class)->state('create')->create();
-        $user = factory(User::class)->create();
-        $this->actingAs($user)
+         $this->actingAs($thread->user)
             ->putJson(route('app.user.thread.update', ['thread'=> $thread->id, 'user'=> $thread->user->id]), [
             'thread'=> $threadTitle = Factory::create()->sentence,
             'description'=> $description = Factory::create()->sentence(2)

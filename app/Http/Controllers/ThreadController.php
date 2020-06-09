@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\HttpResponses;
 use App\Http\Controllers\Concerns\ImageStorage;
 use App\Http\Resources\ThreadCollection;
 use App\Http\Resources\ThreadResource;
@@ -15,6 +16,11 @@ class ThreadController extends Controller
 {
     use ImageStorage;
 
+    public function __construct()
+    {
+        $this->middleware('auth.only.self')->only(['store', 'update']);
+    }
+
     public function index()
     {
 
@@ -25,14 +31,7 @@ class ThreadController extends Controller
     {
         $thread = $user->threads()->where('id', $thread->id)->firstOrFail();
 
-        return response()->json([
-            'status'=> $this->ok,
-            'message'=> Response::$statusTexts[$this->ok],
-            'data'=> [
-                'thread'=> new ThreadResource($thread)
-            ]
-        ]);
-
+        return $this->response($this->ok, ['thread'=> new ThreadResource($thread)]);
     }
 
     public function store(User $user, Request $request)
@@ -63,13 +62,7 @@ class ThreadController extends Controller
             ]);
         });
 
-        return response()->json([
-                'status' =>$this->created ,
-                'message'=> Response::$statusTexts[$this->created],
-                'data'=>[
-                    'thread'=> new ThreadResource($thread)
-                ]
-            ], $this->created);
+        return $this->response($this->created, ['thread'=> new ThreadResource($thread)]);
     }
 
     public function update(User $user, Thread $thread, Request $request)
@@ -81,13 +74,7 @@ class ThreadController extends Controller
 
         $thread->update($request->only(['thread', 'description']));
 
-        return response()->json([
-            'status'=> $this->ok,
-            'message'=> Response::$statusTexts[$this->ok],
-            'data'=>[
-                 'thread'=> new ThreadResource($thread->refresh())
-            ]
-        ], $this->ok);
+        return $this->response($this->ok, ['thread'=> new ThreadResource($thread->refresh())]);
     }
 
 

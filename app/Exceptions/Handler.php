@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use function collect;
 use function config;
 use function dd;
 use function env;
@@ -55,16 +56,17 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        if($exception instanceof ValidationException && env('APP_ENV') === 'testing')
+        if($exception instanceof ValidationException)
         {
             return response()->json(
                 [
                     'message'=>'Validation exception thrown',
-                    'errors'=> $exception->errors()
+                    'errors'=> collect($exception->errors())->flatten()
 
                 ], 422
             );
         }
+//        if($exception instanceof Forbi)
 
         return parent::render($request, $exception);
     }

@@ -34,14 +34,14 @@ Route::middleware('api')->namespace('Auth')->group(static function (Router $rout
 
 Route::name('app.')->middleware(['auth:api'])->group(static function(Router $router){
 
-    $router->put('user/{user}',                     [UserController::class, 'update'])->name('user.update');
+    $router->put('users/{user}',                     [UserController::class, 'update'])->name('user.update');
 
     //Threads
-    $router->get('user/{user}/threads',             [UserController::class, 'threads'])->name('user.threads');
+    $router->get('users/{user}/threads',             [UserController::class, 'threads'])->name('user.threads');
     $router->get('threads',                         [ThreadController::class, 'index'])->name('thread.index');
-    $router->get('user/{user}/threads/{thread}',    [ThreadController::class, 'show'])->name('user.thread.show');
-    $router->post('user/{user}/threads',            [ThreadController::class,'store'])->name('user.thread.store');
-    $router->put('user/{user}/threads/{thread}',    [ThreadController::class, 'update'])->name('user.thread.update');
+    $router->get('users/{user}/threads/{thread}',    [ThreadController::class, 'show'])->name('user.thread.show');
+    $router->post('users/{user}/threads',            [ThreadController::class,'store'])->name('user.thread.store');
+    $router->put('users/{user}/threads/{thread}',    [ThreadController::class, 'update'])->name('user.thread.update');
 
     //Posts in Thread
     $router->post('users/{user}/threads/{thread}/posts',                  [PostController::class, 'store'])->name('user.thread.post.store');
@@ -49,7 +49,7 @@ Route::name('app.')->middleware(['auth:api'])->group(static function(Router $rou
     $router->delete('users/{user}/threads/{thread}/posts/{post}',         [PostController::class, 'destroy'])->name('user.thread.post.delete');
 
     // Tags in Thread
-    $router->post('user/{user}/threads/{thread}/tags',              [TagThreadController::class, 'store'])->name('user.thread.tag.store');
+    $router->post('users/{user}/threads/{thread}/tags',              [TagThreadController::class, 'store'])->name('user.thread.tag.store');
     $router->delete('user/{user}/threads/{thread}/tags',            [TagThreadController::class, 'destroy'])->name('user.thread.tag.delete');
 
     //Saved threads
