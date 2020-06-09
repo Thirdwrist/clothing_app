@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\SavedModel;
 use App\Models\Thread;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -38,11 +39,6 @@ class User extends Authenticatable implements JWTSubject
 
     protected $guarded = [];
 
-    public function threads()
-    {
-        return $this->hasMany(Thread::class);
-    }
-
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
@@ -61,5 +57,15 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function threads()
+    {
+        return $this->hasMany(Thread::class);
+    }
+
+    public function savedThreads()
+    {
+        return $this->belongsToMany(Thread::class, 'saved_models', 'user_id', 'model_id')->where('model_type', Thread::class);
     }
 }

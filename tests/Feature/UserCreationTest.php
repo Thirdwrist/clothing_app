@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\Concerns\HttpResponses;
 use function auth;
 use function collect;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,6 +16,8 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserCreationTest extends TestCase
 {
+    use HttpResponses;
+
     /**
      * A basic feature test example.
      *
@@ -30,11 +33,7 @@ class UserCreationTest extends TestCase
         $res = $this->postJson(route('register'), $user)
             ->assertStatus(201);
 
-        $res->assertJson(
-            [
-                'status'=> $status = Response::HTTP_CREATED,
-                'message'=> Response::$statusTexts[$status]
-            ]);
+        $res->assertJson($this->responseInArray($this->created()));
 
     }
 
@@ -52,8 +51,7 @@ class UserCreationTest extends TestCase
         ]);
 
         $this->postJson(route('register'), $user)
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['username', 'email']);
+            ->assertStatus(422);
 
         $this->assertDatabaseMissing('users', [
             'name'=> $user['name']

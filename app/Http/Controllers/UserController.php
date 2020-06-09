@@ -6,12 +6,18 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ThreadCollection;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 use App\User;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth.only.self')->only('update');
+    }
+
     public function update(User $user, Request $request)
     {
         $request->validate([
@@ -25,16 +31,16 @@ class UserController extends Controller
         ]);
 
         $user->update($request->only([
-            'name', 'username', 'gender', 'role', 'email', 'nationality','password'
+            'name', 'username', 'gender', 'role', 'email', 'nationality'
         ]));
 
-        return response()->json([
-            'status'=> $this->ok,
-            'message'=> Response::$statusTexts[$this->ok],
-            'data'=> [
-                'user'=> $user
-            ]
-        ], $this->ok);
+        if($request->get('password'))
+        {
+            $user->update(['password'=> Hash::make($request->get('password'))]);
+
+        }
+
+        return $this->response($this->ok, ['user'=> $user->refresh()]);
     }
 
     public function threads(User $user)
