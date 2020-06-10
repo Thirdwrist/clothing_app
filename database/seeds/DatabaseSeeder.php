@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
                     factory(Collection::class, 4)->raw() // Create Collections
                 )
                 ->each(function ($collection) use ($user){
-                    $collection->threads()->attach($collection->id, ['user_id'=>$user->id]); // Add threads to collections
+                    $collection->threads()->attach($collection->id, ['user_id'=>$user->id]); // Attach existing threads to collections
                 });
             });
 
