@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             })
             ->each(static function ($user){
                 $user->collections()->createMany(
-                    factory(Collection::class, 4)->raw() // Create Collections
+                    factory(Collection::class, 4)->raw() //  Create Collections
                 )
                 ->each(function ($collection) use ($user){
                     $collection->threads()->attach($collection->id, ['user_id'=>$user->id]); // Attach existing threads to collections
