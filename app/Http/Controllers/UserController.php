@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\SlimCollectionResource;
 use App\Http\Resources\ThreadCollection;
-use App\Models\Collection;
-use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;

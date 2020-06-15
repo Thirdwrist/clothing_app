@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $users = factory(User::class, 4)
+        factory(User::class, 4)
             ->state('create')
             ->create() // Create users
             ->each(static function($user){
