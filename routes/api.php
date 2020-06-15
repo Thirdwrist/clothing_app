@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\CollectionThreadController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SaveThreadController;
 use App\Http\Controllers\TagController;
@@ -53,7 +55,7 @@ Route::name('app.')->middleware(['auth:api'])->group(static function(Router $rou
     $router->delete('user/{user}/threads/{thread}/tags',            [TagThreadController::class, 'destroy'])->name('user.thread.tag.delete');
 
     //Saved threads
-    $router->get('users/{user}/save/threads',                   [SaveThreadController::class, 'index'])->name('user.save.thread.index');
+    $router->get('users/{user}/save/threads',                   [UserController::class, 'savedThreads'])->name('user.save.thread.index');
     $router->post('users/{user}/save/threads/{thread}',         [SaveThreadController::class, 'store'])->name('user.save.thread.store');
     $router->delete('users/{user}/save/threads/{thread}',       [SaveThreadController::class, 'destroy'])->name('user.save.thread.delete');
 
@@ -61,6 +63,14 @@ Route::name('app.')->middleware(['auth:api'])->group(static function(Router $rou
     $router->get('tags',                                        [TagController::class, 'index'])->name('tag.index');
     $router->post('tags',                                       [TagController::class, 'store'])->name('tag.store');
     $router->put('tags/{tag}',                                  [TagController::class, 'update'])->name('tag.update');
+
+    $router->get('users/{user}/collections',                                    [UserController::class, 'collections'])->name('user.collections');
+    $router->post('users/{user}/collections',                                   [CollectionController::class, 'store'])->name('user.collections.store');
+    $router->put('users/{user}/collections/{collection}',                       [CollectionController::class, 'update'])->name('user.collections.update');
+    $router->delete('users/{user}/collections/{collection}',                    [CollectionController::class, 'destroy'])->name('user.collections.delete');
+
+    $router->post('users/{user}/collections/{collection}/threads',                          [CollectionThreadController::class, 'store'])->name('user.collections.threads.store');
+    $router->delete('users/{user}/collections/{collection}/threads/{thread}',               [CollectionThreadController::class, 'destroy'])->name('user.collections.threads.delete');
 
 });
 

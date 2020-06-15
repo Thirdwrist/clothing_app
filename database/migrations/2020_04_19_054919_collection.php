@@ -16,8 +16,9 @@ class Collection extends Migration
         Schema::create('collections', function (Blueprint $table) {
             $table->id();
             $table->string('collection');
+            $table->string('slug');
             $table->unsignedBigInteger("user_id");
-            $table->longText('Description');
+            $table->longText('description')->nullable();
             $table->timestamps();
             $table->foreign("user_id")
                 ->references("id")
@@ -32,6 +33,8 @@ class Collection extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('collections');
+        Schema::enableForeignKeyConstraints();
     }
 }

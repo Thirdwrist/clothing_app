@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Collection;
 use App\Models\SavedModel;
 use App\Models\Thread;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -67,5 +68,10 @@ class User extends Authenticatable implements JWTSubject
     public function savedThreads()
     {
         return $this->belongsToMany(Thread::class, 'saved_models', 'user_id', 'model_id')->where('model_type', Thread::class);
+    }
+
+    public function collections()
+    {
+        return $this->hasMany(Collection::class);
     }
 }

@@ -16,12 +16,6 @@ class SaveThreadController extends Controller
         $this->middleware('auth.only.self')->only(['store', 'destroy']);
     }
 
-    public function index(Request $request)
-    {
-        $savedThreads = $request->user()->savedThreads;
-
-        return $this->response($this->ok,['models'=> new ThreadCollection($savedThreads)]);
-    }
 
     public function store(User $user, Thread $thread, Request $request)
     {
