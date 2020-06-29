@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Explore;
 
 use App\Http\Controllers\Concerns\ImageStorage;
 use App\Http\Resources\ThreadResource;
@@ -9,6 +9,7 @@ use App\Rules\MaximItem;
 use App\User;
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Http\Controllers\Controller;
 
 class PostController extends Controller
 {
@@ -26,8 +27,6 @@ class PostController extends Controller
             'image'=>['required', 'image', 'max:15000'],
             'description'=>['string', new MaximItem($thread->posts(), config('data.max_posts_in_thread'), 'posts')]
         ]);
-
-
 
         Post::create([
             'image_url'=> $this->uploadImage($request->file('image')),

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Explore;
 
 use App\Models\Thread;
 use App\Rules\MaximItem;
 use App\User;
-use function config;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class TagThreadController extends Controller
 {

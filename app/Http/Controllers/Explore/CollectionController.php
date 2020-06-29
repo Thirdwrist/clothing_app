@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Explore;
 
 use App\Http\Resources\CollectionResource;
 use App\Http\Resources\SlimCollectionResource;
@@ -10,6 +10,7 @@ use App\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Http\Controllers\Controller;
 
 class CollectionController extends Controller
 {

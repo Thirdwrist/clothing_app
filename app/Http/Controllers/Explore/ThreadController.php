@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Explore;
 
 use App\Http\Controllers\Concerns\ImageStorage;
 use App\Http\Resources\ThreadCollection;
@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\Thread;
 use App\User;
 use Illuminate\Http\Request;
+Use App\Http\Controllers\Controller;
 
 class ThreadController extends Controller
 {

@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Explore;
 
 use App\Models\Collection;
 use App\Models\Thread;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Controllers\Controller;
+
 
 class CollectionThreadController extends Controller
 {

@@ -98,6 +98,9 @@ class AuthController extends Controller
         return Auth::guard('api');
     }
 
+    /*
+     * Initial registration process
+     * */
     public  function register(Request $request)
     {
         $request->validate([

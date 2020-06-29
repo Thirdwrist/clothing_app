@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Explore;
 
 use App\Http\Resources\ThreadCollection;
 use App\Models\Thread;
@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Models\SavedModel;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Controllers\Controller;
 
 class SaveThreadController extends Controller
 {

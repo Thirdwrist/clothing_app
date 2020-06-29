@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Models\Collection;
-use App\Models\SavedModel;
 use App\Models\Thread;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
